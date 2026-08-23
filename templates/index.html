@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Popy Crunch - Crispy Mini Popia{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-container">
+        <div class="hero-content">
+            <span class="hero-tagline">"Crispy • Thin • Addictive"</span>
+            <h1 class="hero-title">POPY CRUNCH</h1>
+            <p class="hero-text">"Crunchy mini popia made for every snacking moment."</p>
+            <a href="{{ url_for('shop') }}" class="btn btn-primary btn-large">SHOP NOW</a>
+        </div>
+        <div class="hero-images">
+            <div class="hero-image-wrapper">
+                <img src="{{ url_for('static', filename='images/cheese-flavour.jpg') }}" alt="Cheese Flavour" class="hero-img">
+                <span class="flavour-tag cheese">Cheese</span>
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="{{ url_for('static', filename='images/salted-egg-flavour.jpg') }}" alt="Salted Egg Flavour" class="hero-img">
+                <span class="flavour-tag salted">Salted Egg</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Business Introduction -->
+<section class="intro">
+    <div class="container">
+        <h2>Welcome to Popy Crunch</h2>
+        <p class="intro-text">
+            Popy Crunch is a local snack brand offering crispy and thin mini popia in delicious Cheese and Salted Egg flavours. 
+            Our goal is to provide an affordable, convenient and satisfying snack for students, families and snack lovers.
+        </p>
+    </div>
+</section>
+
+<!-- Why Popy Crunch -->
+<section class="features">
+    <div class="container">
+        <h2>Why Popy Crunch?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Crispy & Thin</h3>
+                <p>Light and crunchy texture for an enjoyable snacking experience.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Affordable</h3>
+                <p>Only RM12.50 per jar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧀</div>
+                <h3>Two Signature Flavours</h3>
+                <p>Choose between Cheese and Salted Egg.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Convenient Packaging</h3>
+                <p>Easy to carry, store and enjoy anytime.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Business Milestone -->
+<section class="milestone">
+    <div class="container">
+        <div class="milestone-content">
+            <div class="milestone-number">RM700+</div>
+            <h2>SALES ACHIEVED</h2>
+            <p>Thank you for supporting Popy Crunch!</p>
+            <div class="milestone-bar"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="featured-products">
+    <div class="container">
+        <h2>Featured Products</h2>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                </div>
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p class="product-flavour">{{ product.flavour }}</p>
+                    <p class="product-price">RM {{ "%.2f"|format(product.price) }}</p>
+                    <p class="product-desc">{{ product.description }}</p>
+                    <button class="btn btn-primary add-to-cart" data-product-id="{{ product.id }}">
+                        ADD TO CART
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq">
+    <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>What flavours are available?</h4>
+                <p>Cheese and Salted Egg.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How much is one jar?</h4>
+                <p>RM12.50 per jar.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How can I order?</h4>
+                <p>Add your preferred products to the cart and proceed to checkout.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Do you offer delivery?</h4>
+                <p>Customers can select delivery or self pickup during checkout.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
