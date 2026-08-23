@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Popy Crunch{% endblock %}
+
+{% block content %}
+<section class="contact-page">
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p class="contact-heading">Have questions? Contact us!</p>
+        
+        <div class="contact-container">
+            <div class="contact-form-wrapper">
+                <form method="POST" class="contact-form">
+                    <div class="form-group">
+                        <label for="contact_name">Name</label>
+                        <input type="text" id="contact_name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_email">Email</label>
+                        <input type="email" id="contact_email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_message">Message</label>
+                        <textarea id="contact_message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
+                </form>
+            </div>
+            
+            <div class="contact-info-wrapper">
+                <h3>Connect With Us</h3>
+                <div class="contact-info-items">
+                    <div class="contact-info-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <strong>WhatsApp</strong>
+                            <p><a href="#">+60 12-345 6789</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fab fa-instagram"></i>
+                        <div>
+                            <strong>Instagram</strong>
+                            <p><a href="#">@popycrunch</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fab fa-tiktok"></i>
+                        <div>
+                            <strong>TikTok</strong>
+                            <p><a href="#">@popycrunch</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email</strong>
+                            <p><a href="mailto:hello@popycrunch.com">hello@popycrunch.com</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
