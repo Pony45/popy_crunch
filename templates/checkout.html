@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Popy Crunch{% endblock %}
+
+{% block content %}
+<section class="checkout-page">
+    <div class="container">
+        <h1>Checkout</h1>
+        
+        <div class="checkout-container">
+            <form method="POST" action="{{ url_for('checkout') }}" class="checkout-form">
+                <div class="checkout-section">
+                    <h2>Customer Information</h2>
+                    <div class="form-group">
+                        <label for="full_name">Full Name *</label>
+                        <input type="text" id="full_name" name="full_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Delivery Address *</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="order_notes">Order Notes (optional)</label>
+                        <textarea id="order_notes" name="order_notes" rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <div class="checkout-section">
+                    <h2>Delivery Options</h2>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="delivery_method" value="delivery" checked>
+                            <span>Delivery (RM 5.00)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="delivery_method" value="pickup">
+                            <span>Self Pickup (Free)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="checkout-section">
+                    <h2>Order Summary</h2>
+                    {% for item in cart_items %}
+                    <div class="checkout-item">
+                        <span>{{ item.name }} × {{ item.quantity }}</span>
+                        <span>RM {{ "%.2f"|format(item.total) }}</span>
+                    </div>
+                    {% endfor %}
+                    <div class="checkout-totals">
+                        <div class="checkout-row">
+                            <span>Subtotal</span>
+                            <span>RM {{ "%.2f"|format(subtotal) }}</span>
+                        </div>
+                        <div class="checkout-row">
+                            <span>Delivery Fee</span>
+                            <span id="delivery-fee-display">RM 5.00</span>
+                        </div>
+                        <div class="checkout-total">
+                            <span><strong>Total</strong></span>
+                            <span><strong id="total-display">RM {{ "%.2f"|format(subtotal + 5) }}</strong></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block btn-large">PLACE ORDER</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Update total when delivery method changes
+    document.querySelectorAll('input[name="delivery_method"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            const deliveryFee = this.value === 'delivery' ? 5.00 : 0.00;
+            const subtotal = {{ subtotal }};
+            const total = subtotal + deliveryFee;
+            
+            document.getElementById('delivery-fee-display').textContent = 'RM ' + deliveryFee.toFixed(2);
+            document.getElementById('total-display').textContent = 'RM ' + total.toFixed(2);
+        });
+    });
+</script>
+{% endblock %}
