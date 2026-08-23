@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Your Cart - Popy Crunch{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+    <div class="container">
+        <h1>Your Cart</h1>
+        
+        {% if cart_items %}
+        <div class="cart-container">
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item" data-product-id="{{ item.id }}">
+                    <div class="cart-item-image">
+                        <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}">
+                    </div>
+                    <div class="cart-item-details">
+                        <h3>{{ item.name }}</h3>
+                        <p class="cart-item-flavour">{{ item.flavour }}</p>
+                        <p class="cart-item-price">RM {{ "%.2f"|format(item.price) }}</p>
+                    </div>
+                    <div class="cart-item-controls">
+                        <div class="cart-quantity">
+                            <button class="qty-btn cart-qty-minus" data-product-id="{{ item.id }}">-</button>
+                            <input type="number" class="qty-input cart-qty-input" id="cart-qty-{{ item.id }}" value="{{ item.quantity }}" min="1" max="99">
+                            <button class="qty-btn cart-qty-plus" data-product-id="{{ item.id }}">+</button>
+                        </div>
+                        <p class="cart-item-total">RM {{ "%.2f"|format(item.total) }}</p>
+                        <button class="btn-remove" data-product-id="{{ item.id }}">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">RM {{ "%.2f"|format(subtotal) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span>Calculated at checkout</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="cart-total">RM {{ "%.2f"|format(subtotal) }}</span>
+                </div>
+                <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-block">PROCEED TO CHECKOUT</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart empty-cart-icon"></i>
+            <h2>Your cart is empty.</h2>
+            <p>Ready to start snacking?</p>
+            <a href="{{ url_for('shop') }}" class="btn btn-primary">CONTINUE SHOPPING</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
