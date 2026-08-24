@@ -33,6 +33,14 @@
                     <span>RM {{ "%.2f"|format(item.total) }}</span>
                 </div>
                 {% endfor %}
+                
+                {% if order.promo_discount and order.promo_discount > 0 %}
+                <div class="confirmation-item promo-discount">
+                    <span>🔥 Promo Buy 2 = RM24 (Save RM1)</span>
+                    <span>- RM {{ "%.2f"|format(order.promo_discount) }}</span>
+                </div>
+                {% endif %}
+                
                 <div class="confirmation-total">
                     <span><strong>Total Amount</strong></span>
                     <span><strong>RM {{ "%.2f"|format(order.total) }}</strong></span>

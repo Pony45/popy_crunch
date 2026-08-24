@@ -55,19 +55,38 @@
                         <span>RM {{ "%.2f"|format(item.total) }}</span>
                     </div>
                     {% endfor %}
+                    
+                    <!-- Promo Section -->
+                    {% set total_qty = cart_items|sum(attribute='quantity') %}
+                    {% set promo_discount = (total_qty // 2) * 1 %}
+                    
                     <div class="checkout-totals">
                         <div class="checkout-row">
                             <span>Subtotal</span>
                             <span>RM {{ "%.2f"|format(subtotal) }}</span>
                         </div>
+                        
+                        {% if promo_discount > 0 %}
+                        <div class="checkout-row promo-discount">
+                            <span>🔥 Promo Buy 2 = RM24 (Save RM1)</span>
+                            <span>- RM {{ "%.2f"|format(promo_discount) }}</span>
+                        </div>
+                        {% endif %}
+                        
                         <div class="checkout-row">
                             <span>Delivery Fee</span>
                             <span id="delivery-fee-display">RM 5.00</span>
                         </div>
+                        
+                        {% set final_total = subtotal - promo_discount + 5 %}
                         <div class="checkout-total">
                             <span><strong>Total</strong></span>
-                            <span><strong id="total-display">RM {{ "%.2f"|format(subtotal + 5) }}</strong></span>
+                            <span><strong id="total-display">RM {{ "%.2f"|format(final_total) }}</strong></span>
                         </div>
+                        
+                        {% if promo_discount > 0 %}
+                        <p class="promo-savings-checkout">🎉 You saved RM {{ "%.2f"|format(promo_discount) }} with our promo!</p>
+                        {% endif %}
                     </div>
                 </div>
                 
@@ -85,7 +104,8 @@
         radio.addEventListener('change', function() {
             const deliveryFee = this.value === 'delivery' ? 5.00 : 0.00;
             const subtotal = {{ subtotal }};
-            const total = subtotal + deliveryFee;
+            const promoDiscount = {{ promo_discount if promo_discount is defined else 0 }};
+            const total = subtotal - promoDiscount + deliveryFee;
             
             document.getElementById('delivery-fee-display').textContent = 'RM ' + deliveryFee.toFixed(2);
             document.getElementById('total-display').textContent = 'RM ' + total.toFixed(2);

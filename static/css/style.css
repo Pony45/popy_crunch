@@ -1322,3 +1322,65 @@ body {
         height: 200px;
     }
 }
+/* Product Promo */
+.product-price-wrapper {
+    margin-bottom: 10px;
+}
+
+.product-promo {
+    color: #e85d3a;
+    font-weight: 700;
+    font-size: 0.8rem;
+    background: #fff5f0;
+    padding: 4px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 4px;
+    border: 1px solid #f5d742;
+}
+
+/* Promo Styles */
+.product-price-wrapper {
+    margin-bottom: 10px;
+}
+
+.product-promo {
+    color: #e85d3a;
+    font-weight: 700;
+    font-size: 0.8rem;
+    background: #fff5f0;
+    padding: 4px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 4px;
+    border: 1px solid #f5d742;
+}
+
+.promo-discount {
+    color: #e85d3a;
+    font-weight: 600;
+    border-bottom: 1px dashed #e85d3a;
+    padding-bottom: 8px;
+}
+
+.promo-savings {
+    color: #e85d3a;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+    background: #fff5f0;
+    border-radius: 10px;
+    margin: 10px 0;
+    border: 1px solid #f5d742;
+}
+
+.promo-savings-checkout {
+    color: #e85d3a;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+    background: #fff5f0;
+    border-radius: 10px;
+    margin: 10px 0;
+    border: 1px solid #f5d742;
+}

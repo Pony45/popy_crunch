@@ -41,14 +41,32 @@
                     <span>Subtotal</span>
                     <span id="cart-subtotal">RM {{ "%.2f"|format(subtotal) }}</span>
                 </div>
+                
+                <!-- Promo Section -->
+                {% set total_qty = cart_items|sum(attribute='quantity') %}
+                {% set promo_discount = (total_qty // 2) * 1 %}
+                {% if promo_discount > 0 %}
+                <div class="summary-row promo-discount">
+                    <span>🔥 Promo Buy 2 = RM24 (Save RM1)</span>
+                    <span>- RM {{ "%.2f"|format(promo_discount) }}</span>
+                </div>
+                {% endif %}
+                
                 <div class="summary-row">
                     <span>Delivery</span>
                     <span>Calculated at checkout</span>
                 </div>
+                
+                {% set final_total = subtotal - promo_discount %}
                 <div class="summary-total">
                     <span>Total</span>
-                    <span id="cart-total">RM {{ "%.2f"|format(subtotal) }}</span>
+                    <span id="cart-total">RM {{ "%.2f"|format(final_total) }}</span>
                 </div>
+                
+                {% if promo_discount > 0 %}
+                <p class="promo-savings">🎉 You saved RM {{ "%.2f"|format(promo_discount) }} with our promo!</p>
+                {% endif %}
+                
                 <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-block">PROCEED TO CHECKOUT</a>
             </div>
         </div>

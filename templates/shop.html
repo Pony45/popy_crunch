@@ -15,7 +15,10 @@
                 <div class="product-info">
                     <h3>{{ product.name }}</h3>
                     <p class="product-flavour">{{ product.flavour }}</p>
-                    <p class="product-price">RM {{ "%.2f"|format(product.price) }}</p>
+                    <div class="product-price-wrapper">
+                        <p class="product-price">RM {{ "%.2f"|format(product.price) }}</p>
+                        <p class="product-promo">🔥 Buy 2 = RM24 (Save RM1)</p>
+                    </div>
                     <p class="product-desc">{{ product.description }}</p>
                     <div class="quantity-selector">
                         <button class="qty-btn qty-minus" data-product-id="{{ product.id }}">-</button>

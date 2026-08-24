@@ -3,6 +3,7 @@ import sqlite3
 import uuid
 from datetime import datetime
 import os
+import json
 
 app = Flask(__name__)
 app.secret_key = 'popy_crunch_secret_key_2026'
@@ -19,7 +20,6 @@ def init_db():
     conn = get_db()
     cursor = conn.cursor()
     
-    # Create orders table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +41,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Products data
 PRODUCTS = [
     {
         'id': 1,
@@ -105,14 +104,16 @@ def cart():
                 'total': total
             })
     
-    return render_template('cart.html', cart_items=cart_items, subtotal=subtotal)
+    total_quantity = sum(item['quantity'] for item in cart.values())
+    promo_discount = (total_quantity // 2) * 1
+    
+    return render_template('cart.html', cart_items=cart_items, subtotal=subtotal, promo_discount=promo_discount)
 
 @app.route('/add-to-cart', methods=['POST'])
 def add_to_cart():
     product_id = str(request.json.get('product_id'))
     quantity = int(request.json.get('quantity', 1))
     
-    # Validate product exists
     product = next((p for p in PRODUCTS if str(p['id']) == product_id), None)
     if not product:
         return jsonify({'success': False, 'message': 'Product not found'}), 404
@@ -155,7 +156,6 @@ def update_cart():
     session['cart'] = cart
     session.modified = True
     
-    # Recalculate
     cart_items = []
     subtotal = 0
     
@@ -205,8 +205,10 @@ def checkout():
                 'total': total
             })
     
+    total_quantity = sum(item['quantity'] for item in cart.values())
+    promo_discount = (total_quantity // 2) * 1
+    
     if request.method == 'POST':
-        # Process order
         customer_name = request.form.get('full_name')
         phone = request.form.get('phone')
         email = request.form.get('email')
@@ -214,18 +216,15 @@ def checkout():
         delivery_method = request.form.get('delivery_method')
         order_notes = request.form.get('order_notes', '')
         
-        # Calculate delivery fee
         delivery_fee = 5.00 if delivery_method == 'delivery' else 0.00
-        total = subtotal + delivery_fee
+        total = subtotal - promo_discount + delivery_fee
         
-        # Generate order number
         order_number = f"PC-{datetime.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
         
-        # Save to database
         conn = get_db()
         cursor = conn.cursor()
         
-        items_json = str(cart_items)  # Simple serialization
+        items_json = json.dumps(cart_items)
         
         cursor.execute('''
             INSERT INTO orders 
@@ -241,29 +240,48 @@ def checkout():
         conn.commit()
         conn.close()
         
-        # Clear cart
         session.pop('cart', None)
         
-        # Store order in session for confirmation
+        # ===== INI YANG DIUBAH =====
+        # Simpan items dalam session sebagai LIST
         session['last_order'] = {
             'order_number': order_number,
             'customer_name': customer_name,
-            'items': cart_items,
+            'items': cart_items,  # ← cart_items tu LIST
             'subtotal': subtotal,
             'delivery_fee': delivery_fee,
             'total': total,
-            'delivery_method': delivery_method
+            'delivery_method': delivery_method,
+            'promo_discount': promo_discount
         }
+        # ===========================
         
         return redirect(url_for('confirmation'))
     
-    return render_template('checkout.html', cart_items=cart_items, subtotal=subtotal)
+    return render_template('checkout.html', cart_items=cart_items, subtotal=subtotal, promo_discount=promo_discount)
 
 @app.route('/confirmation')
 def confirmation():
     order = session.get('last_order')
     if not order:
         return redirect(url_for('index'))
+    
+    # ===== INI YANG DIUBAH =====
+    # Pastikan items adalah LIST, bukan string
+    if 'items' in order:
+        # Kalau dia string, convert guna json.loads
+        if isinstance(order['items'], str):
+            try:
+                order['items'] = json.loads(order['items'])
+            except:
+                order['items'] = []
+        # Kalau dia bukan string dan bukan list, buat list kosong
+        elif not isinstance(order['items'], list):
+            order['items'] = []
+    else:
+        order['items'] = []
+    # ===========================
+    
     return render_template('confirmation.html', order=order)
 
 @app.route('/clear-cart', methods=['POST'])
@@ -271,7 +289,6 @@ def clear_cart():
     session.pop('cart', None)
     return jsonify({'success': True})
 
-# Initialize database
 with app.app_context():
     init_db()
 
